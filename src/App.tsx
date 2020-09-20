@@ -1,24 +1,35 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import "./App.css";
+import { CallComponent } from "./CallComponent";
+import { useQuery, QueryStatus } from "react-query";
+import { ReactQueryDevtools } from "react-query-devtools";
 
 function App() {
+  const { data, error, status, refetch } = useQuery("todos", async () => {
+    const response = await fetch(
+      "https://jsonplaceholder.typicode.com/todos/1"
+    );
+    const data = await response.json();
+    return data;
+  });
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <CallComponent />
+      <button
+        onClick={() => {
+          refetch();
+        }}
+      >
+        reload
+      </button>
+      {error}
+      {status === QueryStatus.Idle && <p>Idle</p>}
+      {status === QueryStatus.Error && <p>Has error</p>}
+      {status === QueryStatus.Loading && <p>Loading Data</p>}
+      <pre>{JSON.stringify(data, null, 2)}</pre>
+
+      <ReactQueryDevtools />
     </div>
   );
 }
