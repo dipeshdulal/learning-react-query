@@ -1,19 +1,22 @@
 import React, { useState } from "react";
 import { useQuery, QueryStatus } from "react-query";
 
+const fetchFunction = async (_: any, id: string) => {
+  const response = await fetch(
+    `https://jsonplaceholder.typicode.com/todos/${id || 1}`
+  );
+  const data = await response.json();
+  return data;
+};
+
 export const CallComponent = () => {
   const [searchId, setSearchId] = useState<string>();
   const [value, setValue] = useState<string>();
 
-  const { data, error, status, isError } = useQuery(["todos", searchId], async () => {
-    const response = await fetch(
-      `https://jsonplaceholder.typicode.com/todos/${searchId || 1}`
-    );
-    const data = await response.json();
-    return data;
-  }, {
-      refetchOnWindowFocus: false,
-      retry: false,
+  const { data, error, status } = useQuery(["todos", searchId], fetchFunction, {
+    forceFetchOnMount: false,
+    refetchOnWindowFocus: false,
+    retry: false,
   });
   return (
     <div>
