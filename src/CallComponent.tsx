@@ -1,21 +1,31 @@
-import React from "react";
+import React, { useState } from "react";
 import { useQuery, QueryStatus } from "react-query";
 
 export const CallComponent = () => {
-  const { data, error, status } = useQuery(
-    "todos",
-    async () => {
-      const response = await fetch(
-        "https://jsonplaceholder.typicode.com/todos/1"
-      );
-      const data = await response.json();
-      return data;
-    }
-  );
+  const [searchId, setSearchId] = useState<string>();
+  const [value, setValue] = useState<string>();
+
+  const { data, error, status, isError } = useQuery(["todos", searchId], async () => {
+    const response = await fetch(
+      `https://jsonplaceholder.typicode.com/todos/${searchId || 1}`
+    );
+    const data = await response.json();
+    return data;
+  }, {
+      refetchOnWindowFocus: false,
+      retry: false,
+  });
   return (
     <div>
+      <input
+        type="text"
+        onChange={(e) => {
+          setValue(e.target.value);
+        }}
+      />
+      <button onClick={() => setSearchId(value)}>Search Data</button>
       <h1>From Component: </h1>
-      {error}
+      <pre>{JSON.stringify(error, null, 2)}</pre>
       {status === QueryStatus.Idle && <p>Idle</p>}
       {status === QueryStatus.Error && <p>Has error</p>}
       {status === QueryStatus.Loading && <p>Loading Data</p>}
