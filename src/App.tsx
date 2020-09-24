@@ -15,8 +15,8 @@ function App() {
         <Link to="/infinite">Infinite Loading</Link>
         <Switch>
           <Route exact path="/call-component" component={CallComponent} />
-          <Route exact spath="/infinite" component={InfiniteLoading} />
-          <Route exact spath="/" component={Pagination} />
+          <Route exact path="/infinite" component={InfiniteLoading} />
+          <Route exact path="/" component={Pagination} />
         </Switch>
       </Router>
       <ReactQueryDevtools />
