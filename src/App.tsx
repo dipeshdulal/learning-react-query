@@ -1,14 +1,21 @@
 import React from "react";
 import "./App.css";
-import { CallComponent } from "./CallComponent";
+import { CallComponent } from "./pages/CallComponent";
 import { ReactQueryDevtools } from "react-query-devtools";
-import { Pagination } from "./Pagination";
+import { Pagination } from "./pages/Pagination";
+import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 
 function App() {
   return (
     <div className="App">
-      <CallComponent />
-      <Pagination />
+      <Router>
+        <Link to="/call-component">Call Component</Link>
+        <Link to="/">Pagination</Link>
+        <Switch>
+          <Route exact path="/call-component" component={CallComponent} />
+          <Route exact spath="/" component={Pagination} />
+        </Switch>
+      </Router>
       <ReactQueryDevtools />
     </div>
   );
