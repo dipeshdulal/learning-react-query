@@ -1,6 +1,6 @@
 import React from "react";
 import { useForm } from "react-hook-form";
-import { useMutation, MutationFunction } from "react-query";
+import { useMutation, MutationFunction, useQueryCache } from "react-query";
 
 interface FormData {
   text: string;
@@ -19,7 +19,13 @@ const createPosts: MutationFunction<any, any> = async (v) => {
 export const DataMutation = () => {
   const { register, getValues, handleSubmit } = useForm<any>();
 
-  const [mutate, { data, error, isLoading }] = useMutation<any>(createPosts);
+  const queryCache = useQueryCache()
+
+  const [mutate, { data, error, isLoading }] = useMutation<any>(createPosts, {
+    onSuccess: () => {
+      queryCache.invalidateQueries("todos");
+    },
+  });
   return (
     <>
       <p>
